@@ -8,6 +8,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const bookId = localStorage.getItem('selectedBookId');
 
+        // Save recently viewed books (keep only last 5)
+    let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+
+    // Remove if already exists
+    recentlyViewed = recentlyViewed.filter(b => b.id !== book.id);
+
+    // Add current book to the front
+    recentlyViewed.unshift({
+        id: book.id,
+        title: book.title,
+        authors: book.authors,
+        thumbnail: book.thumbnail
+    });
+
+    // Keep only last 5 books
+    recentlyViewed = recentlyViewed.slice(0, 5);
+
+    localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+    
+
     if (!bookId) {
         bookContainer.innerHTML = '<p>No book selected. Go back and select a book.</p>';
         return;
