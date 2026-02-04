@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const recentContainer = document.getElementById('recentBooks');
+    const recentContainer = document.getElementById('recentContainer');
     const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
 
     if (recentlyViewed.length === 0) {

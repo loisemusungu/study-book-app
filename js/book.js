@@ -1,56 +1,34 @@
-import { searchBooks, getAuthorInfo } from './api.js';
+import { searchBooks } from './api.js';
 import { saveFavorite } from './storage.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const bookContainer = document.getElementById('bookContainer');
-    const notesTextarea = document.getElementById('notesTextarea');
-    const saveNotesBtn = document.getElementById('saveNotesBtn');
-
     const bookId = localStorage.getItem('selectedBookId');
-
-        // Save recently viewed books (keep only last 5)
-    let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
-
-    // Remove if already exists
-    recentlyViewed = recentlyViewed.filter(b => b.id !== book.id);
-
-    // Add current book to the front
-    recentlyViewed.unshift({
-        id: book.id,
-        title: book.title,
-        authors: book.authors,
-        thumbnail: book.thumbnail
-    });
-
-    // Keep only last 5 books
-    recentlyViewed = recentlyViewed.slice(0, 5);
-
-    localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
-    
 
     if (!bookId) {
         bookContainer.innerHTML = '<p>No book selected. Go back and select a book.</p>';
         return;
     }
 
-    // Show loading message
     bookContainer.innerHTML = '<p>Loading book details...</p>';
 
     try {
-        // Since Google Books API does not have a "get by ID" in our setup, fetch last search
         const query = localStorage.getItem('lastSearch') || '';
         const books = await searchBooks(query);
 
-        // Find the book by ID
-        const book = books.find(b => b.id === bookId);
-
-        if (!book) {
+        const foundBook = books.find(b => b.id === bookId);
+        if (!foundBook) {
             bookContainer.innerHTML = '<p>Book not found.</p>';
             return;
         }
 
-        // Clear loading message
-        bookContainer.innerHTML = '';
+        const book = {
+            id: foundBook.id,
+            title: foundBook.title,
+            authors: foundBook.authors || ['Unknown author'],
+            thumbnail: foundBook.thumbnail || 'default-image.png',
+            description: foundBook.description || 'No description available'
+        };
 
         // Display book details
         bookContainer.innerHTML = `
@@ -58,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <h2>${book.title}</h2>
             <p><strong>Author:</strong> <span id="authorName">${book.authors.join(', ')}</span></p>
             <p>${book.description}</p>
+            <button id="saveFavoriteBtn">Add to Favorites</button>
             <div class="notes-section">
                 <h3>My Notes</h3>
                 <textarea id="notesTextarea" placeholder="Write your notes here..."></textarea>
@@ -65,15 +44,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
         `;
 
+        // Save recently viewed
+        let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+        recentlyViewed = recentlyViewed.filter(b => b.id !== book.id);
+        recentlyViewed.unshift(book);
+        recentlyViewed = recentlyViewed.slice(0, 5);
+        localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+
         // Load saved notes
         const savedNotes = JSON.parse(localStorage.getItem(`notes_${book.id}`)) || '';
         document.getElementById('notesTextarea').value = savedNotes;
-
-        // Click author name to go to author page
-        document.getElementById('authorName').addEventListener('click', () => {
-            localStorage.setItem('selectedAuthor', book.authors[0]);
-            window.location.href = 'author.html';
-        });
 
         // Save notes
         document.getElementById('saveNotesBtn').addEventListener('click', () => {
@@ -82,8 +62,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('Notes saved!');
         });
 
+        // Save favorite
         document.getElementById('saveFavoriteBtn').addEventListener('click', () => {
             saveFavorite(book);
+        });
+
+        // Click author to go to author page
+        document.getElementById('authorName').addEventListener('click', () => {
+            localStorage.setItem('selectedAuthor', book.authors[0]);
+            window.location.href = 'author.html';
         });
 
     } catch (error) {
