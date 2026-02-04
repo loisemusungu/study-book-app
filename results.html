@@ -11,10 +11,18 @@
 <header>
     <a href="index.html">Back</a>
     <h1>Search Results</h1>
+    <button id="backHomeBtn">Back to Home</button>
+
 </header>
 
 <main>
     <div id="resultsContainer"></div>
+
+    <div id="recentlyViewedContainer">
+        <h3>Recently Viewed</h3>
+        <div id="recentBooks"></div>
+    </div>
+    
 </main>
 
 <footer>
@@ -22,5 +30,13 @@
 </footer>
 
 <script type="module" src="js/results.js"></script>
+<script type="module" src="js/recentlyViewed.js"></script>
+<script>
+    document.getElementById('backHomeBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+</script>
+
+
 </body>
 </html>

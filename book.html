@@ -15,6 +15,7 @@
 
 <main>
     <button id="saveFavoriteBtn">Add to Favorites</button>
+    <button id="backHomeBtn">Back to Home</button>
 
     <div id="bookContainer"></div>
 
@@ -31,5 +32,10 @@
 
 <!-- Include book.js -->
 <script type="module" src="js/book.js"></script>
+<script>
+    document.getElementById('backHomeBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+</script>
 </body>
 </html>

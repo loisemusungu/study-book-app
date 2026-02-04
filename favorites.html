@@ -15,6 +15,7 @@
 
 <main>
     <div id="favoritesContainer"></div>
+    <button id="backHomeBtn">Back to Home</button>
 </main>
 
 <footer>
@@ -22,5 +23,11 @@
 </footer>
 
 <script type="module" src="js/favorites.js"></script> 
+<script>
+    document.getElementById('backHomeBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+</script>
+
 </body>
 </html>

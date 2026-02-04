@@ -15,6 +15,7 @@
 
 <main>
     <div id="authorContainer"></div>
+    <button id="backHomeBtn">Back to Home</button>
 </main>
 
 <footer>
@@ -22,5 +23,10 @@
 </footer>
 
 <script type="module" src="js/author.js"></script>
+<script>
+    document.getElementById('backHomeBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+</script>
 </body>
 </html>
