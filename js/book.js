@@ -1,4 +1,5 @@
 import { searchBooks, getAuthorInfo } from './api.js';
+import { saveFavorite } from './storage.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const bookContainer = document.getElementById('bookContainer');
@@ -59,13 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const notes = document.getElementById('notesTextarea').value;
             localStorage.setItem(`notes_${book.id}`, JSON.stringify(notes));
             alert('Notes saved!');
+        });
 
-            import { saveFavorite } from './storage.js';
-
-// Save favorite
-document.getElementById('saveFavoriteBtn').addEventListener('click', () => {
-    saveFavorite(book);
-});
+        document.getElementById('saveFavoriteBtn').addEventListener('click', () => {
+            saveFavorite(book);
         });
 
     } catch (error) {
