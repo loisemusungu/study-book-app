@@ -15,6 +15,7 @@
 
 <main>
     <button id="saveFavoriteBtn">Add to Favorites</button>
+    <button id="viewFavoritesBtn">View Favorites</button>
     <button id="backHomeBtn">Back to Home</button>
 
     <div id="bookContainer"></div>
@@ -30,6 +31,9 @@
 <script>
     document.getElementById('backHomeBtn').addEventListener('click', () => {
         window.location.href = 'index.html';
+    });
+    document.getElementById('viewFavoritesBtn').addEventListener('click', () => {
+        window.location.href = 'favorites.html';
     });
 </script>
 </body>

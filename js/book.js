@@ -1,5 +1,5 @@
 import { searchBooks } from './api.js';
-import { saveFavorite } from './storage.js';
+import { saveFavorite, saveRecentlyViewed, saveBookNotes, getBookNotes } from './storage.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const bookContainer = document.getElementById('bookContainer');
@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             <h2>${book.title}</h2>
             <p><strong>Author:</strong> <span id="authorName">${book.authors.join(', ')}</span></p>
             <p>${book.description}</p>
-            <button id="saveFavoriteBtn">Add to Favorites</button>
             <div class="notes-section">
                 <h3>My Notes</h3>
                 <textarea id="notesTextarea" placeholder="Write your notes here..."></textarea>
@@ -44,30 +43,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
         `;
 
-        // Save recently viewed
-        let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
-        recentlyViewed = recentlyViewed.filter(b => b.id !== book.id);
-        recentlyViewed.unshift(book);
-        recentlyViewed = recentlyViewed.slice(0, 5);
-        localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+        // Save recently viewed book
+        saveRecentlyViewed(book);
 
         // Load saved notes
-        const savedNotes = JSON.parse(localStorage.getItem(`notes_${book.id}`)) || '';
+        const savedNotes = getBookNotes(book.id);
         document.getElementById('notesTextarea').value = savedNotes;
 
-        // Save notes
+        // Save notes on button click
         document.getElementById('saveNotesBtn').addEventListener('click', () => {
             const notes = document.getElementById('notesTextarea').value;
-            localStorage.setItem(`notes_${book.id}`, JSON.stringify(notes));
+            saveBookNotes(book.id, notes);
             alert('Notes saved!');
         });
 
-        // Save favorite
+        // Save book as favorite
         document.getElementById('saveFavoriteBtn').addEventListener('click', () => {
             saveFavorite(book);
         });
 
-        // Click author to go to author page
+        // Click author name to go to author page
         document.getElementById('authorName').addEventListener('click', () => {
             localStorage.setItem('selectedAuthor', book.authors[0]);
             window.location.href = 'author.html';
