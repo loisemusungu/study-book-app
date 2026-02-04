@@ -1,5 +1,3 @@
-export { searchBooks, getAuthorInfo };
-
 // api.js
 
 // Base URL for Google Books API
@@ -57,3 +55,5 @@ async function getAuthorInfo(authorName) {
         };
     }
 }
+
+export { searchBooks, getAuthorInfo };
