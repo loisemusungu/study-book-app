@@ -27,3 +27,31 @@ async function searchBooks(query) {
         return [];
     }
 }
+
+// Function to get author info from Wikipedia
+async function getAuthorInfo(authorName) {
+    try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(authorName)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Author page not found');
+        }
+
+        const data = await response.json();
+
+        return {
+            title: data.title,
+            extract: data.extract,
+            pageUrl: data.content_urls?.desktop?.page || '#'
+        };
+
+    } catch (error) {
+        console.error('Error fetching Wikipedia data:', error);
+        return {
+            title: authorName,
+            extract: 'No biography found',
+            pageUrl: '#'
+        };
+    }
+}
