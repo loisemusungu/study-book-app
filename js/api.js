@@ -1,3 +1,5 @@
+export { searchBooks, getAuthorInfo };
+
 // api.js
 
 // Base URL for Google Books API
